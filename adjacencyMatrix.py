@@ -1,20 +1,33 @@
+from histogram import Histogram
 class AdjacencyMatrix():
-    def __init__(self, isDirected = True, amountNodes = 3, edges = []):
+    def __init__(self, isDirected = True, amountNodes = 3, edges = [], isWeighted = True):
         self._isDirected = isDirected
-        if(not AdjacencyMatrix._check_edges(edges)):
-            exit()
         self._amountNodes = amountNodes
+        self._isWeighted = isWeighted
+        if(not self._check_edges(edges)):
+            exit()
+
         self._init_adjacency_matrix(edges)
+                
     
     def _fill_metrix(self, edges):
         if(edges != None):
             if(self._isDirected):
-                for edge in edges:
-                    self._adjacency_matrix[edge[0]][edge[1]] = 1
+                if(self._isWeighted):
+                    for edge in edges:
+                        self._adjacency_matrix[edge[0]][edge[1]] = edge[2]
+                else:
+                    for edge in edges:
+                        self._adjacency_matrix[edge[0]][edge[1]] = 1
             else:
-                for edge in edges:
-                    self._adjacency_matrix[edge[0]][edge[1]] = 1
-                    self._adjacency_matrix[edge[1]][edge[0]] = 1
+                if(self._isWeighted):
+                    for edge in edges:
+                        self._adjacency_matrix[edge[0]][edge[1]] = edge[2]
+                        self._adjacency_matrix[edge[1]][edge[0]] = edge[2]
+                else:
+                    for edge in edges:
+                        self._adjacency_matrix[edge[0]][edge[1]] = 1
+                        self._adjacency_matrix[edge[1]][edge[0]] = 1
 
         
     def _init_adjacency_matrix(self, edges):
@@ -29,15 +42,21 @@ class AdjacencyMatrix():
 
 
                 
-    def _check_edges(edges):
-        def _check_edge(edge):
+    def _check_edges(self, edges):
+        def _check_edge(isWeighted, edge):
+            if(isWeighted):
+                return isinstance(edge,tuple) and len(edge) == 3
+            
             return isinstance(edge,tuple) and len(edge) == 2
         
         if(edges == None):
             print("The list of edges is empty")
             return False
-        if(not all(_check_edge(edge) for edge in edges)):
-            print("The edges are not tuple with length 2")
+        if(not all(_check_edge(self._isWeighted,edge) for edge in edges)):
+            if(self._isWeighted):
+                print("The edges are not tuple with length 3")
+            else:
+                print("The edges are not tuple with length 2")
             return False
         
         return True
@@ -55,6 +74,8 @@ class AdjacencyMatrix():
         print("Degree node:")
         for node in degree_nodes.keys():
             print(node, degree_nodes[node])
+        Histogram.show("Degree node", "Node", "Degree", degree_nodes.keys(), degree_nodes.values())
+
         
     def _calculate_degree_directed(self):
         degree_nodes_out = dict.fromkeys(range(0,self._amountNodes), 0)
@@ -68,10 +89,45 @@ class AdjacencyMatrix():
         print("Degree node out:")
         for node in degree_nodes_out.keys():
             print(node, degree_nodes_out[node])
-        
+        Histogram.show("Degree node out", "Node", "Degree", degree_nodes_out.keys(), degree_nodes_out.values())
+
         print("Degree node input:")
         for node in degree_nodes_input.keys():
             print(node, degree_nodes_input[node])
+        Histogram.show("Degree node input", "Node", "Degree", degree_nodes_input.keys(), degree_nodes_input.values())
+    
+    
+    def _calculate_strength_undirected(self):
+        strength_nodes = dict.fromkeys(range(0,self._amountNodes), 0)
+        for row in range(0, self._amountNodes):
+            for column in self._adjacency_matrix[row]:
+                strength_nodes[row] += column
+        
+        print("Strength node:")
+        for node in strength_nodes.keys():
+            print(node, strength_nodes[node])
+        Histogram.show("Strength node", "Node", "Strength", strength_nodes.keys(), strength_nodes.values())
+    
+    def _calculate_strength_directed(self):
+        strength_nodes = dict.fromkeys(range(0,self._amountNodes), 0)
+        for row in range(0, self._amountNodes):
+            for column in range(0, self._amountNodes):
+                strength_nodes[column] +=self._adjacency_matrix[row][column]
+                strength_nodes[row] +=self._adjacency_matrix[row][column]
+                
+        print("Strength node:")
+        for node in strength_nodes.keys():
+            print(node, strength_nodes[node])
+        Histogram.show("Strength node", "Node", "Strength", strength_nodes.keys(), strength_nodes.values())
+        
+    def calculate_strength(self):
+        if(not self._isWeighted):
+            print("The graph is not weighted")
+        else:
+            if(self._isDirected):
+                self._calculate_strength_directed()
+            else:
+                self._calculate_strength_undirected()
             
     def calculate_degree(self):
         if(self._isDirected):
@@ -86,11 +142,14 @@ class AdjacencyMatrix():
                 print(column,  end =" ")
             print("")
     
-edges = [(0,1),(0,2),(1,2), (2,3)]
+edges = [(0,1,0.3),(0,2, 0.2),(1,2,0.2), (2,3,0.1)]
 
-am = AdjacencyMatrix(True, 4, edges)
+am = AdjacencyMatrix(True, 4, edges, True)
 am.print()
 am.calculate_degree()
+am.calculate_strength()
+
+
 
             
             
