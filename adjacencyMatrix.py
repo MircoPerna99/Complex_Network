@@ -4,6 +4,7 @@ class AdjacencyMatrix():
         self._isDirected = isDirected
         self._amountNodes = amountNodes
         self._isWeighted = isWeighted
+       
         if(not self._check_edges(edges)):
             exit()
 
@@ -43,23 +44,28 @@ class AdjacencyMatrix():
 
                 
     def _check_edges(self, edges):
+        def generate_error_message_not_valid_edges(isWeighted):
+            return "The edges are not tuple with length 3" if isWeighted else "The edges are not tuple with length 2"
+        
         def _check_edge(isWeighted, edge):
-            if(isWeighted):
-                return isinstance(edge,tuple) and len(edge) == 3
-            
-            return isinstance(edge,tuple) and len(edge) == 2
+            lenTuple = 3 if isWeighted else 2
+            return isinstance(edge,tuple) and len(edge) == lenTuple
         
         if(edges == None):
             print("The list of edges is empty")
             return False
+        
         if(not all(_check_edge(self._isWeighted,edge) for edge in edges)):
-            if(self._isWeighted):
-                print("The edges are not tuple with length 3")
-            else:
-                print("The edges are not tuple with length 2")
+            print(generate_error_message_not_valid_edges(self._isWeighted))
             return False
         
         return True
+    
+    def _print_dictionary(title, dictionary, labelKeys, labelValues):
+        print(title)
+        for node in dictionary.keys():
+            print(node, dictionary[node])
+        Histogram.show(title, labelKeys, labelValues, dictionary.keys(), dictionary.values())
     
     def _calculate_degree_undirected(self):
         degree_nodes = dict.fromkeys(range(0,self._amountNodes), 0)
@@ -71,10 +77,7 @@ class AdjacencyMatrix():
             
             degree_nodes[row] =  degree
         
-        print("Degree node:")
-        for node in degree_nodes.keys():
-            print(node, degree_nodes[node])
-        Histogram.show("Degree node", "Node", "Degree", degree_nodes.keys(), degree_nodes.values())
+        AdjacencyMatrix._print_dictionary("Degree node",degree_nodes, "Node", "Degree")
 
         
     def _calculate_degree_directed(self):
@@ -86,15 +89,8 @@ class AdjacencyMatrix():
                     degree_nodes_input[column] +=1
                     degree_nodes_out[row] +=1
         
-        print("Degree node out:")
-        for node in degree_nodes_out.keys():
-            print(node, degree_nodes_out[node])
-        Histogram.show("Degree node out", "Node", "Degree", degree_nodes_out.keys(), degree_nodes_out.values())
-
-        print("Degree node input:")
-        for node in degree_nodes_input.keys():
-            print(node, degree_nodes_input[node])
-        Histogram.show("Degree node input", "Node", "Degree", degree_nodes_input.keys(), degree_nodes_input.values())
+        AdjacencyMatrix._print_dictionary("Degree node out",degree_nodes_out, "Node", "Degree")
+        AdjacencyMatrix._print_dictionary("Degree node input",degree_nodes_input, "Node", "Degree")
     
     
     def _calculate_strength_undirected(self):
@@ -103,10 +99,7 @@ class AdjacencyMatrix():
             for column in self._adjacency_matrix[row]:
                 strength_nodes[row] += column
         
-        print("Strength node:")
-        for node in strength_nodes.keys():
-            print(node, strength_nodes[node])
-        Histogram.show("Strength node", "Node", "Strength", strength_nodes.keys(), strength_nodes.values())
+        AdjacencyMatrix._print_dictionary("Strength node",strength_nodes, "Node", "Strength")
     
     def _calculate_strength_directed(self):
         strength_nodes = dict.fromkeys(range(0,self._amountNodes), 0)
@@ -115,10 +108,8 @@ class AdjacencyMatrix():
                 strength_nodes[column] +=self._adjacency_matrix[row][column]
                 strength_nodes[row] +=self._adjacency_matrix[row][column]
                 
-        print("Strength node:")
-        for node in strength_nodes.keys():
-            print(node, strength_nodes[node])
-        Histogram.show("Strength node", "Node", "Strength", strength_nodes.keys(), strength_nodes.values())
+        AdjacencyMatrix._print_dictionary("Strength node",strength_nodes, "Node", "Strength")
+
         
     def calculate_strength(self):
         if(not self._isWeighted):
