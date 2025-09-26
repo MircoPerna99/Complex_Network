@@ -1,45 +1,50 @@
 from histogram import Histogram
+import numpy as np
 class AdjacencyMatrix():
     def __init__(self, isDirected = True, amountNodes = 3, edges = [], isWeighted = True):
         self._isDirected = isDirected
         self._amountNodes = amountNodes
         self._isWeighted = isWeighted
+        self.degree_nodes : dict
+        self.degree_nodes_input  : dict
+        self.degree_nodes_out : dict
+        self.strength_nodes : dict
        
         if(not self._check_edges(edges)):
             exit()
+        
+        self._edges = edges
 
-        self._init_adjacency_matrix(edges)
-                
+        self._init_adjacency_matrix()
     
-    def _fill_metrix(self, edges):
-        if(edges != None):
+    def getAmountEdges(self):
+        return len(self._edges)            
+    
+    def _fill_metrix(self, edgesToAdd : list = []):
+        if(edgesToAdd == None or len(edgesToAdd) == 0):
+            edgesToAdd = self._edges
+        if(edgesToAdd != None):
             if(self._isDirected):
                 if(self._isWeighted):
-                    for edge in edges:
-                        self._adjacency_matrix[edge[0]][edge[1]] = edge[2]
+                    for edge in edgesToAdd:
+                        self._adjacency_matrix[edge[0],edge[1]] = edge[2]
                 else:
-                    for edge in edges:
-                        self._adjacency_matrix[edge[0]][edge[1]] = 1
+                    for edge in edgesToAdd:
+                        self._adjacency_matrix[edge[0],edge[1]] = 1
             else:
                 if(self._isWeighted):
-                    for edge in edges:
-                        self._adjacency_matrix[edge[0]][edge[1]] = edge[2]
-                        self._adjacency_matrix[edge[1]][edge[0]] = edge[2]
+                    for edge in edgesToAdd:
+                        self._adjacency_matrix[edge[0],edge[1]] = edge[2]
+                        self._adjacency_matrix[edge[1],edge[0]] = edge[2]
                 else:
-                    for edge in edges:
-                        self._adjacency_matrix[edge[0]][edge[1]] = 1
-                        self._adjacency_matrix[edge[1]][edge[0]] = 1
+                    for edge in edgesToAdd:
+                        self._adjacency_matrix[edge[0],edge[1]] = 1
+                        self._adjacency_matrix[edge[1],edge[0]] = 1
 
         
-    def _init_adjacency_matrix(self, edges):
-        self._adjacency_matrix = []
-        for i in range(0,self._amountNodes):
-            row = []
-            for j in range(0,self._amountNodes):
-                row.append(0)
-            self._adjacency_matrix.append(row)
-        
-        self._fill_metrix(edges)
+    def _init_adjacency_matrix(self):
+        self._adjacency_matrix = np.zeros(shape=(self._amountNodes,self._amountNodes))    
+        self._fill_metrix()
 
 
                 
@@ -77,7 +82,9 @@ class AdjacencyMatrix():
             
             degree_nodes[row] =  degree
         
-        AdjacencyMatrix._print_dictionary("Degree node",degree_nodes, "Node", "Degree")
+        # AdjacencyMatrix._print_dictionary("Degree node",degree_nodes, "Node", "Degree")
+
+        self.degree_nodes = degree_nodes
 
         
     def _calculate_degree_directed(self):
@@ -89,8 +96,10 @@ class AdjacencyMatrix():
                     degree_nodes_input[column] +=1
                     degree_nodes_out[row] +=1
         
-        AdjacencyMatrix._print_dictionary("Degree node out",degree_nodes_out, "Node", "Degree")
-        AdjacencyMatrix._print_dictionary("Degree node input",degree_nodes_input, "Node", "Degree")
+        # AdjacencyMatrix._print_dictionary("Degree node out",degree_nodes_out, "Node", "Degree")
+        # AdjacencyMatrix._print_dictionary("Degree node input",degree_nodes_input, "Node", "Degree")
+        self.degree_nodes_input = degree_nodes_input
+        self.degree_nodes_out = degree_nodes_out
     
     
     def _calculate_strength_undirected(self):
@@ -99,7 +108,7 @@ class AdjacencyMatrix():
             for column in self._adjacency_matrix[row]:
                 strength_nodes[row] += column
         
-        AdjacencyMatrix._print_dictionary("Strength node",strength_nodes, "Node", "Strength")
+        self.strength_nodes = strength_nodes
     
     def _calculate_strength_directed(self):
         strength_nodes = dict.fromkeys(range(0,self._amountNodes), 0)
@@ -108,7 +117,7 @@ class AdjacencyMatrix():
                 strength_nodes[column] +=self._adjacency_matrix[row][column]
                 strength_nodes[row] +=self._adjacency_matrix[row][column]
                 
-        AdjacencyMatrix._print_dictionary("Strength node",strength_nodes, "Node", "Strength")
+        self.strength_nodes = strength_nodes
 
         
     def calculate_strength(self):
@@ -133,12 +142,35 @@ class AdjacencyMatrix():
                 print(column,  end =" ")
             print("")
     
-edges = [(0,1,0.3),(0,2, 0.2),(1,2,0.2), (2,3,0.1)]
-
-am = AdjacencyMatrix(True, 4, edges, True)
-am.print()
-am.calculate_degree()
-am.calculate_strength()
+    def takeNeighbors(self, node):
+        neighbors = []
+        for column in range(0,self._amountNodes):
+            if(self._adjacency_matrix[node][column] > 0):
+                neighbors.append(column)
+        
+        return neighbors
+    
+    def _addColumn(self, newNode:int):
+        nodeToAdd = np.zeros(shape=(self._amountNodes, newNode))
+        self._adjacency_matrix = np.append(self._adjacency_matrix, nodeToAdd, axis = 1)
+        
+    def _addRow(self):
+        nodeToAdd =  np.zeros( (1, self._amountNodes))
+        self._adjacency_matrix = np.append(self._adjacency_matrix, nodeToAdd, axis=0)
+        
+    def addNodes(self, newNode:int):
+        self._addColumn(newNode)
+        
+        self._amountNodes = self._amountNodes + newNode
+        self._addRow()
+    
+    def addEdges(self, newEdges):
+        if(not self._check_edges(newEdges)):
+            exit()
+        self._fill_metrix(newEdges)
+        self._edges.append(newEdges)
+        
+        
 
 
 
