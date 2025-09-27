@@ -5,10 +5,10 @@ class AdjacencyMatrix():
         self._isDirected = isDirected
         self._amountNodes = amountNodes
         self._isWeighted = isWeighted
-        self.degree_nodes : dict
-        self.degree_nodes_input  : dict
-        self.degree_nodes_out : dict
-        self.strength_nodes : dict
+        self.degree_nodes : dict = None
+        self.degree_nodes_input  : dict = None
+        self.degree_nodes_out : dict = None
+        self.strength_nodes : dict = None
        
         if(not self._check_edges(edges)):
             exit()
@@ -16,6 +16,9 @@ class AdjacencyMatrix():
         self._edges = edges
 
         self._init_adjacency_matrix()
+    
+    def getAmountNodes(self):
+        return self._amountNodes
     
     def getAmountEdges(self):
         return len(self._edges)            
@@ -82,9 +85,17 @@ class AdjacencyMatrix():
             
             degree_nodes[row] =  degree
         
-        # AdjacencyMatrix._print_dictionary("Degree node",degree_nodes, "Node", "Degree")
-
         self.degree_nodes = degree_nodes
+        
+    def printDegreeNodesDistribution(self):
+        if(self._isDirected):
+            print("The graph is directed, use the other methods")
+            exit()
+        
+        if(self.degree_nodes == None or len(self.degree_nodes) == 0):
+            self._calculate_degree_undirected()
+            
+        AdjacencyMatrix._print_dictionary("Degree node",self.degree_nodes, "Node", "Degree")
 
         
     def _calculate_degree_directed(self):
@@ -96,11 +107,28 @@ class AdjacencyMatrix():
                     degree_nodes_input[column] +=1
                     degree_nodes_out[row] +=1
         
-        # AdjacencyMatrix._print_dictionary("Degree node out",degree_nodes_out, "Node", "Degree")
-        # AdjacencyMatrix._print_dictionary("Degree node input",degree_nodes_input, "Node", "Degree")
         self.degree_nodes_input = degree_nodes_input
         self.degree_nodes_out = degree_nodes_out
+        
+    def printDegreeNodesOutDistribution(self):
+        if(not self._isDirected):
+            print("The graph is undirected, use the other methods")
+            exit()
+        
+        if(self.degree_nodes_out == None or len(self.degree_nodes_out) == 0):
+            self._calculate_degree_undirected()
+            
+        AdjacencyMatrix._print_dictionary("Degree node out",self.degree_nodes_out, "Node", "Degree")
     
+    def printDegreeNodesInputDistribution(self):
+        if(not self._isDirected):
+            print("The graph is undirected, use the other methods")
+            exit()
+        
+        if(self.degree_nodes_input == None or len(self.degree_nodes_input) == 0):
+            self._calculate_degree_undirected()
+            
+        AdjacencyMatrix._print_dictionary("Degree node input",self.degree_nodes_input, "Node", "Degree")    
     
     def _calculate_strength_undirected(self):
         strength_nodes = dict.fromkeys(range(0,self._amountNodes), 0)
@@ -109,6 +137,16 @@ class AdjacencyMatrix():
                 strength_nodes[row] += column
         
         self.strength_nodes = strength_nodes
+        
+    def printStrengthUndirectedDistribution(self):
+        if(self._isDirected):
+            print("The graph is directed, use the other methods")
+            exit()
+        
+        if(self.strength_nodes == None or len(self.strength_nodes) == 0):
+            self._calculate_strength_undirected()
+            
+        AdjacencyMatrix._print_dictionary("Strength ",self.strength_nodes, "Node", "Strength")  
     
     def _calculate_strength_directed(self):
         strength_nodes = dict.fromkeys(range(0,self._amountNodes), 0)
@@ -119,6 +157,15 @@ class AdjacencyMatrix():
                 
         self.strength_nodes = strength_nodes
 
+    def printStrengthUndirectedDistribution(self):
+        if(not self._isDirected):
+            print("The graph is undirected, use the other methods")
+            exit()
+        
+        if(self.strength_nodes == None or len(self.strength_nodes) == 0):
+            self._calculate_strength_directed()
+            
+        AdjacencyMatrix._print_dictionary("Strength ",self.strength_nodes, "Node", "Strength")  
         
     def calculate_strength(self):
         if(not self._isWeighted):

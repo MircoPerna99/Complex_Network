@@ -25,7 +25,7 @@ class BarabasiAlbert(ModelBase):
                 p = float(degreeNodes[node] / (2 * self.adjancencyMatrix.getAmountEdges()))
             
                 if (uniform(0,1) <= p):
-                    edgesToAdd.append((self.adjancencyMatrix._amountNodes-1, node))
+                    edgesToAdd.append((self.adjancencyMatrix.getAmountNodes()-1, node))
                 if(len(edgesToAdd) == self.amountNewConnections):
                     break
         

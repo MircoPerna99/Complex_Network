@@ -9,6 +9,7 @@ from Models.Barabasi_Albert_Model import BarabasiAlbert
 print("Erdos-Renji Type A")
 model = ErdosRenjiTypeA(5, 6)
 model.printAdjancencyMatrix()
+model.printDegreesNodeDistribution()
 # modelBA = BarabasiAlbert(model.adjacencyMatrix._amountNodes, model.adjacencyMatrix._edges, 2)
 
 # modelBA.adjancencyMatrix.print()
