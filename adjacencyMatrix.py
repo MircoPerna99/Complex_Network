@@ -21,7 +21,10 @@ class AdjacencyMatrix():
         return self._amountNodes
     
     def getAmountEdges(self):
-        return len(self._edges)            
+        return len(self._edges)  
+    
+    def getEdges(self):
+        return self._edges          
     
     def _fill_metrix(self, edgesToAdd : list = []):
         if(edgesToAdd == None or len(edgesToAdd) == 0):
@@ -70,9 +73,9 @@ class AdjacencyMatrix():
         return True
     
     def _print_dictionary(title, dictionary, labelKeys, labelValues):
-        print(title)
-        for node in dictionary.keys():
-            print(node, dictionary[node])
+        # print(title)
+        # for node in dictionary.keys():
+        #     print(node, dictionary[node])
         Histogram.show(title, labelKeys, labelValues, dictionary.keys(), dictionary.values())
     
     def _calculate_degree_undirected(self):
@@ -216,7 +219,6 @@ class AdjacencyMatrix():
             exit()
         self._fill_metrix(newEdges)
         self._edges.append(newEdges)
-        
         
 
 

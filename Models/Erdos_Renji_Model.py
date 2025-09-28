@@ -26,7 +26,7 @@ class ErdosRenjiTypeA(ModelBase):
             
         selectedEdges = sample( possibleEdges, self._amountOfEdges)
         
-        self._initAdjancencyMatrix(self._amountOfNodes,selectedEdges)
+        self._initAdjacencyMatrix(self._amountOfNodes,selectedEdges)
         
         
 class ErdosRenjiTypeB(ModelBase):
@@ -53,7 +53,7 @@ class ErdosRenjiTypeB(ModelBase):
                 if(uniform(0.0, 1.0) < self.probNewNodeLink):
                     edgesToAdd.append((i,j))
                 
-        self._initAdjancencyMatrix(self._amountOfNodes,edgesToAdd)
+        self._initAdjacencyMatrix(self._amountOfNodes,edgesToAdd)
 
 
         
