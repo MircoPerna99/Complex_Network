@@ -1,4 +1,6 @@
 from histogram import Histogram
+import igraph as ig
+import matplotlib.pyplot as plt
 import numpy as np
 class AdjacencyMatrix():
     def __init__(self, isDirected = True, amountNodes = 3, edges = [], isWeighted = True):
@@ -13,7 +15,7 @@ class AdjacencyMatrix():
         if(not self._check_edges(edges)):
             exit()
         
-        self._edges = edges
+        self._edges :list = edges 
 
         self._init_adjacency_matrix()
     
@@ -46,6 +48,18 @@ class AdjacencyMatrix():
                     for edge in edgesToAdd:
                         self._adjacency_matrix[edge[0],edge[1]] = 1
                         self._adjacency_matrix[edge[1],edge[0]] = 1
+                        
+    def _removes_edges_metrix(self, edgesToRemove : list = []):
+        if(edgesToRemove == None or len(edgesToRemove) == 0):
+            return
+        if(edgesToRemove != None):
+            if(self._isDirected):
+                for edge in edgesToRemove:
+                    self._adjacency_matrix[edge[0],edge[1]] = 0
+            else:
+                for edge in edgesToRemove:
+                    self._adjacency_matrix[edge[0],edge[1]] = 0
+                    self._adjacency_matrix[edge[1],edge[0]] = 0
 
         
     def _init_adjacency_matrix(self):
@@ -213,12 +227,41 @@ class AdjacencyMatrix():
         
         self._amountNodes = self._amountNodes + newNode
         self._addRow()
-    
+        
+    def removeEdges(self, edgesToRemove):
+        if(not self._check_edges(edgesToRemove)):
+            exit()
+        self._removes_edges_metrix(edgesToRemove)
+        for edge in edgesToRemove:
+            self._edges.remove(edge)
+        self.calculate_degree()
+        
+
     def addEdges(self, newEdges):
         if(not self._check_edges(newEdges)):
             exit()
         self._fill_metrix(newEdges)
-        self._edges.append(newEdges)
+        self._edges = self._edges + newEdges
+        self.calculate_degree()
+        
+    def printGraph(self, title):
+        network = ig.Graph( self._amountNodes, self._edges )
+        network["title"] = title
+
+        fig, ax = plt.subplots( figsize= (10,10) )
+        ig.plot(
+            network,
+            target= ax,
+            vertex_size= 30,
+            vertex_color= "purple",
+            vertex_frame_width= 0,
+            edge_color= "black",
+            edge_width= 1.0,
+            layout= "fr"
+        )
+        ax.set_title(title)
+
+        plt.show()
         
 
 

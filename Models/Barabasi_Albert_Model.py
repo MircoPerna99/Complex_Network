@@ -31,12 +31,11 @@ class BarabasiAlbert(ModelBase):
             for node in range(len(self.adjacencyMatrix.degree_nodes)):
                 p = float(self.adjacencyMatrix.degree_nodes[node] / (2 * self.adjacencyMatrix.getAmountEdges()))
             
-                if (uniform(0,1) <= p):
+                if (uniform(0,1) <= p and (self.adjacencyMatrix.getAmountNodes()-1, node) not in edgesToAdd):
                     edgesToAdd.append((self.adjacencyMatrix.getAmountNodes()-1, node))
                 if(len(edgesToAdd) == self.amountNewConnections):
                     break
                 
-        self.adjacencyMatrix.calculate_degree()
         self.adjacencyMatrix.addEdges(edgesToAdd)
     
     def addNodes(self, amountNewNodes, calculateAverageDegreeInTime = False):
@@ -48,10 +47,3 @@ class BarabasiAlbert(ModelBase):
     
     def printAverageDegreeInTime(self):
         AdjacencyMatrix._print_dictionary("Average Degree In Time",self.degreeInTime, "Time", "Average Degree")  
-
-    
-    def _print_dictionary(title, dictionary, labelKeys, labelValues):
-        # print(title)
-        # for node in dictionary.keys():
-        #     print(node, dictionary[node])
-        Histogram.show(title, labelKeys, labelValues, dictionary.keys(), dictionary.values())

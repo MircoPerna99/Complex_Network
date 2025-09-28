@@ -2,6 +2,7 @@ from adjacencyMatrix import AdjacencyMatrix
 class ModelBase():
     def __init__(self):
         self.adjacencyMatrix : AdjacencyMatrix
+        self.nameGraph = "Model"
             
     def printAdjacencyMatrix(self):
         self.adjacencyMatrix.print()
@@ -20,5 +21,9 @@ class ModelBase():
     
     def areDegreeNodesNull(self):
         return self.adjacencyMatrix.degree_nodes == None or len(self.adjacencyMatrix.degree_nodes) == 0
+    
+    def printGraph(self):
+        self.adjacencyMatrix.printGraph("Model")
+
         
         
