@@ -30,13 +30,9 @@ class WattsStrogatzModel(ModelBase):
     
     def _generateRegularCirucalarNetwork(self):
         def calculateRightEdges(amountEdges, amountNodes, node, edges):
-            for i in range(1, amountEdges+1):
-                if(node+i >= amountNodes):
-                   vertexOne = node
-                   vertexTwo = (node+i-amountNodes)
-                else:
-                    vertexOne = node
-                    vertexTwo = (node+i)
+            for i in range(1, amountEdges+1):      
+                vertexOne = node
+                vertexTwo = (node + i) % amountNodes
                 
                 if((vertexTwo, vertexOne) not in edges):
                     edges.append((vertexOne,vertexTwo))
@@ -44,12 +40,8 @@ class WattsStrogatzModel(ModelBase):
         
         def calculateLeftEdges(amountEdges, amountNodes, node,edges):
             for i in range(1, amountEdges+1):
-                if(node-i < 0):
-                    vertexOne = node
-                    vertexTwo = (amountNodes+node-i)
-                else:
-                    vertexOne = node
-                    vertexTwo = (node-i)
+                vertexOne = node
+                vertexTwo = (node - i) % amountNodes
             
                 if((vertexTwo, vertexOne) not in edges):
                     edges.append((vertexOne,vertexTwo))
@@ -65,34 +57,31 @@ class WattsStrogatzModel(ModelBase):
         
         self._initAdjacencyMatrix(self._amountNodes, edges)
     
-    # def rewing(self, probRewining = 0.0):
-    #         def isToChange():
-    #             return uniform(0,1) < self._probRewining
+    def rewing(self):
+            def isToChange():
+                return uniform(0,1) < self._probRewining
             
-    #         def calculateRightEdges(amountEdges, amountNodes, node, edges):
-    #             chnages = []
-    #             for i in range(1, amountEdges+1):
-    #                 if(node+i >= amountNodes):
-    #                     vertexOne = node
-    #                     vertexTwo = (node+i-amountNodes)
-    #                 else:
-    #                     vertexOne = node
-    #                     vertexTwo = (node+i)
-                    
-    #                 if(isToChange()):
-    #                     ed
-                    
-    #                 if((vertexTwo, vertexOne) not in edges):
-    #                     edges.append((vertexOne,vertexTwo))
-                        
-    #         if(probRewining == 0.0 and self._probRewining == 0.0):
-    #             return
-    #         if(probRewining != 0.0):
-    #             self._probRewining = probRewining
-            
-    #         nodeForSide = int(self._initialDegree / 2)
+            def apply_rewing(i, amountNodes, node):
+                    vertexOne = node
+                    vertexTwo = (node+i) % amountNodes
 
-    #         for i in range(self._amountNodes):
-    #             if(uniform(0,1) < self._probRewining):
+                    if(isToChange()):
+                        newNode = random.randint(0, amountNodes-1)
+                        while newNode == vertexOne or newNode == vertexTwo or self.adjacencyMatrix.IsALink(vertexOne,newNode):
+                            newNode = random.randint(0, amountNodes-1)
+                        
+                        self.adjacencyMatrix.removeEdges([(vertexOne, vertexTwo)])
+                        self.adjacencyMatrix.addEdges([(vertexOne, newNode)])
+                    
+
+                        
+            if(self._probRewining == 0.0):
+                return
+            
+            nodeForSide = self._initialDegree // 2
+
+            for i in range(self._amountNodes):
+                for j in range(1,nodeForSide+1):
+                    apply_rewing(j,self._amountNodes, i)
                     
     

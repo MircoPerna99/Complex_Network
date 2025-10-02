@@ -29,10 +29,10 @@ from Models.Watts_Strogatz_Model import WattsStrogatzModel
 # model.adjacencyMatrix.calculate_degree()
 
 print("Watts-Strogatz Model")
-modelWS = WattsStrogatzModel(12, 4)
+modelWS = WattsStrogatzModel(12, 4,0.5)
 modelWS.printAdjacencyMatrix()
 modelWS.printDegreesNodeDistribution()
 modelWS.printGraph()
-modelWS.adjacencyMatrix.removeEdges([(0, 1)])
+modelWS.rewing()
 modelWS.printDegreesNodeDistribution()
 modelWS.printGraph()

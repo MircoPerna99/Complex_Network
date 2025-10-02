@@ -26,7 +26,10 @@ class AdjacencyMatrix():
         return len(self._edges)  
     
     def getEdges(self):
-        return self._edges          
+        return self._edges   
+    
+    def IsALink(self, nodeOne, nodeTwo):
+        return self._adjacency_matrix[nodeOne, nodeTwo]      
     
     def _fill_metrix(self, edgesToAdd : list = []):
         if(edgesToAdd == None or len(edgesToAdd) == 0):
@@ -233,7 +236,10 @@ class AdjacencyMatrix():
             exit()
         self._removes_edges_metrix(edgesToRemove)
         for edge in edgesToRemove:
-            self._edges.remove(edge)
+            if(edge in self._edges):
+                self._edges.remove(edge)
+            else:
+                self._edges.remove((edge[1], edge[0]))
         self.calculate_degree()
         
 
