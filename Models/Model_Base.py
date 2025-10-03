@@ -10,8 +10,8 @@ class ModelBase():
     def _initAdjacencyMatrix(self, amountNodes, edges):
         self.adjacencyMatrix = AdjacencyMatrix(False, amountNodes, edges, False)
     
-    def printDegreesNodeDistribution(self):
-        self.adjacencyMatrix.printDegreeNodesDistribution()
+    def printDegreesNode(self):
+        self.adjacencyMatrix.printDegreeNodes()
     
     def calculateAverageDegree(self, recalculateDegrees = True):
         if(self.areDegreeNodesNull() or recalculateDegrees):

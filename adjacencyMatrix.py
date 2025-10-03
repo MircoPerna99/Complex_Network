@@ -107,7 +107,8 @@ class AdjacencyMatrix():
         
         self.degree_nodes = degree_nodes
         
-    def printDegreeNodesDistribution(self):
+        
+    def printDegreeNodes(self):
         if(self._isDirected):
             print("The graph is directed, use the other methods")
             exit()
@@ -130,7 +131,7 @@ class AdjacencyMatrix():
         self.degree_nodes_input = degree_nodes_input
         self.degree_nodes_out = degree_nodes_out
         
-    def printDegreeNodesOutDistribution(self):
+    def printDegreeNodesOut(self):
         if(not self._isDirected):
             print("The graph is undirected, use the other methods")
             exit()
@@ -140,7 +141,7 @@ class AdjacencyMatrix():
             
         AdjacencyMatrix._print_dictionary("Degree node out",self.degree_nodes_out, "Node", "Degree")
     
-    def printDegreeNodesInputDistribution(self):
+    def printDegreeNodesInput(self):
         if(not self._isDirected):
             print("The graph is undirected, use the other methods")
             exit()
