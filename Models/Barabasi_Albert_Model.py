@@ -1,8 +1,8 @@
-from adjacencyMatrix import AdjacencyMatrix
+from Adjacency_Matrix import AdjacencyMatrix
 from Models.Model_Base import ModelBase
 import random
 from random import sample, uniform
-from histogram import Histogram
+from Histogram import Histogram
 class BarabasiAlbert(ModelBase):
     def __init__(self, initNodes: int, initEdges :list, m:int):
         self.initNodes = initNodes

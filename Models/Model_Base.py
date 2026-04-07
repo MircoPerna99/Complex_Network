@@ -5,26 +5,32 @@ class ModelBase():
         self.adjacencyMatrix : AdjacencyMatrix
         self.nameGraph = "Model"
             
-    def printAdjacencyMatrix(self):
+    def print_adjacency_matrix(self):
         self.adjacencyMatrix.print()
     
-    def _initAdjacencyMatrix(self, amountNodes, edges):
-        self.adjacencyMatrix = AdjacencyMatrix(False, amountNodes, edges, False)
+    def _init_adjacency_matrix(self, amountNodes, edges):
+        self.adjacencyMatrix = AdjacencyMatrix(amountNodes, edges)
     
-    def printDegreesNode(self):
+    def print_degrees_node(self):
         self.adjacencyMatrix.printDegreeNodes()
     
-    def calculateAverageDegree(self, recalculateDegrees = True):
+    def calculate_average_degree(self, recalculateDegrees = True):
         if(self.areDegreeNodesNull() or recalculateDegrees):
             self.adjacencyMatrix.calculate_degree()
             
         return float(sum(self.adjacencyMatrix.degree_nodes.values())/self.adjacencyMatrix.getAmountEdges())
     
-    def areDegreeNodesNull(self):
+    def are_degree_nodes_null(self):
         return self.adjacencyMatrix.degree_nodes == None or len(self.adjacencyMatrix.degree_nodes) == 0
     
-    def printGraph(self):
-        self.adjacencyMatrix.printGraph("Model")
+    def print_graph(self):
+        self.adjacencyMatrix.print_graph("Model")
+        
+    def print_degree_distribution(self):
+        self.adjacencyMatrix.print_degree_distribution()
+    
+    def print_degree_distribution_normalized(self):
+        self.adjacencyMatrix.print_degree_distribution_normalized()
 
         
         

@@ -148,7 +148,6 @@ class AdjacencyMatrix():
             vertex_frame_width= 0,
             edge_color= "black",
             edge_width= 1.0,
-            edge_label=network.es["weight"],
             layout= "fr"
         )
         ax.set_title(title)
