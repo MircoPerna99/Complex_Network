@@ -12,6 +12,7 @@ class AdjacencyMatrix():
         self.degree_nodes_input  : dict = None
         self.degree_nodes_out : dict = None
         self.strength_nodes : dict = None
+        self.degree_distribution : dict = None
        
         if(not self._check_edges(edges)):
             exit()
@@ -68,8 +69,6 @@ class AdjacencyMatrix():
             edges_to_add.append(new_edge)
             
         self._edges = self._edges + edges_to_add
-            
-        
     
     def _removes_edges_metrix(self, edgesToRemove : list = []):
         if(edgesToRemove == None or len(edgesToRemove) == 0):
@@ -213,6 +212,39 @@ class AdjacencyMatrix():
             self._calculate_degree_directed()
             
         AdjacencyMatrix._print_dictionary("Degree node input",self.degree_nodes_input, "Node", "Degree")  
+        
+    def calculate_degree_distribution(self):
+        if(self._isDirected):
+            print("The graph is directed, use the other methods")
+            exit()
+        
+        if(self.degree_distribution == None):
+            self.degree_distribution = {}
+        
+        if(self.degree_nodes == None or len(self.degree_nodes) == 0):
+            self._calculate_degree_undirected()
+        
+        for node in self.degree_nodes.keys():
+            if(not (self.degree_nodes[node] in self.degree_distribution)):
+                self.degree_distribution[self.degree_nodes[node]] = 1
+            else:
+                self.degree_distribution[self.degree_nodes[node]] += 1
+                
+    def print_degree_distribution(self):
+        if(self.degree_distribution == None or len(self.degree_distribution) == 0):
+            self.calculate_degree_distribution()   
+        
+        AdjacencyMatrix._print_dictionary("Degree distribution",self.degree_distribution, "Degree", "Value")  
+        
+    def print_degree_distribution_normalized(self):
+        if(self.degree_distribution == None or len(self.degree_distribution) == 0):
+            self.calculate_degree_distribution()  
+            
+        degree_distribution_normalize = {k: v / self._amountNodes for k, v in self.degree_distribution.items()}
+        
+        AdjacencyMatrix._print_dictionary("Degree distribution",degree_distribution_normalize, "Degree", "Value") 
+   
+        
 
     def _calculate_strength_directed(self):
         strength_nodes = dict.fromkeys(range(0,self._amountNodes), 0)
