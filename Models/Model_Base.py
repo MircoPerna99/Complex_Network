@@ -1,4 +1,5 @@
-from adjacencyMatrix import AdjacencyMatrix
+from Adjacency_Matrix import AdjacencyMatrix
+
 class ModelBase():
     def __init__(self):
         self.adjacencyMatrix : AdjacencyMatrix
