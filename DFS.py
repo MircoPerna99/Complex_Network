@@ -1,4 +1,5 @@
-from adjacencyMatrix import AdjacencyMatrix
+from Adjacency_Matrix import AdjacencyMatrix
+
 class DFS():
     def __init__(self, adjancecyMatrix: AdjacencyMatrix = None):
         self._adjancecyMatrix = adjancecyMatrix
