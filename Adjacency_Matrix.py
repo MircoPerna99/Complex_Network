@@ -24,10 +24,10 @@ class AdjacencyMatrix():
 
         self._init_adjacency_matrix()
     
-    def getAmountNodes(self):
+    def get_amount_nodes(self):
         return self._amountNodes
     
-    def getAmountEdges(self):
+    def get_amount_edges(self):
         return len(self._edges)  
     
     def getEdges(self):
@@ -36,8 +36,11 @@ class AdjacencyMatrix():
     def isALink(self, nodeOne, nodeTwo):
         return self._adjacency_matrix[nodeOne, nodeTwo]      
     
-    def _fill_metrix(self):
-        for edge in self._edges:
+    def _fill_metrix(self, edges_to_add = None):
+        if(edges_to_add == None):
+            edges_to_add = self._edges
+            
+        for edge in edges_to_add:
             self._adjacency_matrix[edge[0],edge[1]] = edge[2] if self._isWeighted else 1
                           
     def _init_adjacency_matrix(self):
@@ -93,19 +96,18 @@ class AdjacencyMatrix():
         
         return neighbors
     
-    def _addColumn(self, newNode:int):
+    def _add_column(self, newNode:int):
         nodeToAdd = np.zeros(shape=(self._amountNodes, newNode))
         self._adjacency_matrix = np.append(self._adjacency_matrix, nodeToAdd, axis = 1)
         
-    def _addRow(self):
-        nodeToAdd =  np.zeros( (1, self._amountNodes))
+    def _add_row(self):
+        nodeToAdd =  np.zeros((1, self._amountNodes))
         self._adjacency_matrix = np.append(self._adjacency_matrix, nodeToAdd, axis=0)
         
-    def addNodes(self, newNode:int):
-        self._addColumn(newNode)
-        
+    def add_nodes(self, newNode:int):
+        self._add_column(newNode)      
         self._amountNodes = self._amountNodes + newNode
-        self._addRow()
+        self._add_row()
         
     def removeEdges(self, edgesToRemove):
         if(not self._check_edges(edgesToRemove)):
@@ -119,7 +121,7 @@ class AdjacencyMatrix():
         self.calculate_degree()
         
 
-    def addEdges(self, newEdges):
+    def add_edges(self, newEdges):
         if(not self._check_edges(newEdges)):
             exit()
         self._fill_metrix(newEdges)
@@ -178,9 +180,10 @@ class AdjacencyMatrix():
 
     def calculate_degree(self):
         if(self._isDirected):
-            self._calculate_degree_directed()
+            self._calculate_degree_directed() 
         else:
             self._calculate_degree_undirected()
+            self.calculate_degree_distribution()  
     
     def print_degree_nodes(self):
         if(self._isDirected):
@@ -217,8 +220,7 @@ class AdjacencyMatrix():
             print("The graph is directed, use the other methods")
             exit()
         
-        if(self.degree_distribution == None):
-            self.degree_distribution = {}
+        self.degree_distribution = {}
         
         if(self.degree_nodes == None or len(self.degree_nodes) == 0):
             self._calculate_degree_undirected()

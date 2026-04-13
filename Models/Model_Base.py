@@ -15,10 +15,10 @@ class ModelBase():
         self.adjacencyMatrix.printDegreeNodes()
     
     def calculate_average_degree(self, recalculateDegrees = True):
-        if(self.areDegreeNodesNull() or recalculateDegrees):
+        if(self.are_degree_nodes_null() or recalculateDegrees):
             self.adjacencyMatrix.calculate_degree()
             
-        return float(sum(self.adjacencyMatrix.degree_nodes.values())/self.adjacencyMatrix.getAmountEdges())
+        return float(sum(self.adjacencyMatrix.degree_nodes.values())/self.adjacencyMatrix.get_amount_edges())
     
     def are_degree_nodes_null(self):
         return self.adjacencyMatrix.degree_nodes == None or len(self.adjacencyMatrix.degree_nodes) == 0
