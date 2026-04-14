@@ -5,15 +5,15 @@ from random import sample, uniform
 class WattsStrogatzModel(ModelBase):
     def __init__(self, amountNodes, initialDegree, probRewining = 0.0):
         super().__init__()
-        if(not self._checkParameters(amountNodes, initialDegree,probRewining)):
+        if(not self._check_parameters(amountNodes, initialDegree,probRewining)):
             exit()
             
         self._amountNodes = amountNodes
         self._initialDegree = initialDegree
         self._probRewining : float = probRewining 
-        self._generateRegularCirucalarNetwork()
+        self._generate_regular_cirucalar_network()
 
-    def _checkParameters(self, amountNodes, initialDegree,probRewining):
+    def _check_parameters(self, amountNodes, initialDegree,probRewining):
         if(amountNodes < 2):
             print("The numbers of nodes must be higher than 2")
             return False
@@ -28,8 +28,8 @@ class WattsStrogatzModel(ModelBase):
             return False
         return True
     
-    def _generateRegularCirucalarNetwork(self):
-        def calculateRightEdges(amountEdges, amountNodes, node, edges):
+    def _generate_regular_cirucalar_network(self):
+        def calculate_right_edges(amountEdges, amountNodes, node, edges):
             for i in range(1, amountEdges+1):      
                 vertexOne = node
                 vertexTwo = (node + i) % amountNodes
@@ -38,7 +38,7 @@ class WattsStrogatzModel(ModelBase):
                     edges.append((vertexOne,vertexTwo))
             
         
-        def calculateLeftEdges(amountEdges, amountNodes, node,edges):
+        def calculate_left_edges(amountEdges, amountNodes, node,edges):
             for i in range(1, amountEdges+1):
                 vertexOne = node
                 vertexTwo = (node - i) % amountNodes
@@ -52,26 +52,26 @@ class WattsStrogatzModel(ModelBase):
         edges = []
         
         for i in range(self._amountNodes):
-            calculateRightEdges(nodeForSide, self._amountNodes, i,edges) 
-            calculateLeftEdges(nodeForSide, self._amountNodes, i, edges)
+            calculate_right_edges(nodeForSide, self._amountNodes, i,edges) 
+            calculate_left_edges(nodeForSide, self._amountNodes, i, edges)
         
-        self._initAdjacencyMatrix(self._amountNodes, edges)
+        self._init_adjacency_matrix(self._amountNodes, edges)
     
     def rewing(self):
-            def isToChange():
+            def is_to_change():
                 return uniform(0,1) < self._probRewining
             
             def apply_rewing(i, amountNodes, node):
                     vertexOne = node
                     vertexTwo = (node+i) % amountNodes
 
-                    if(isToChange()):
+                    if(is_to_change()):
                         newNode = random.randint(0, amountNodes-1)
-                        while newNode == vertexOne or newNode == vertexTwo or self.adjacencyMatrix.IsALink(vertexOne,newNode):
+                        while newNode == vertexOne or newNode == vertexTwo or self.adjacencyMatrix.is_a_link(vertexOne,newNode):
                             newNode = random.randint(0, amountNodes-1)
                         
-                        self.adjacencyMatrix.removeEdges([(vertexOne, vertexTwo)])
-                        self.adjacencyMatrix.addEdges([(vertexOne, newNode)])
+                        self.adjacencyMatrix.remove_edges([(vertexOne, vertexTwo)])
+                        self.adjacencyMatrix.add_edges([(vertexOne, newNode)])
                     
 
                         

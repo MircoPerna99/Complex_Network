@@ -17,10 +17,10 @@ class AdjacencyMatrix():
         if(not self._check_edges(edges)):
             exit()
         
-        self._edges : list = edges 
-        
         if(not self._isDirected):
-            self._create_edges_for_undirect()
+            edges = self._create_edges_for_undirect(edges)
+            
+        self._edges : list = edges 
 
         self._init_adjacency_matrix()
     
@@ -30,10 +30,10 @@ class AdjacencyMatrix():
     def get_amount_edges(self):
         return len(self._edges)  
     
-    def getEdges(self):
+    def get_edges(self):
         return self._edges   
     
-    def isALink(self, nodeOne, nodeTwo):
+    def is_a_link(self, nodeOne, nodeTwo):
         return self._adjacency_matrix[nodeOne, nodeTwo]      
     
     def _fill_metrix(self, edges_to_add = None):
@@ -65,13 +65,13 @@ class AdjacencyMatrix():
         
         return True
     
-    def _create_edges_for_undirect(self):
+    def _create_edges_for_undirect(self,edges):
         edges_to_add = []
-        for edge in self._edges:
+        for edge in edges:
             new_edge = (edge[1],edge[0], edge[2]) if self._isWeighted else (edge[1],edge[0])
             edges_to_add.append(new_edge)
             
-        self._edges = self._edges + edges_to_add
+        return edges + edges_to_add
     
     def _removes_edges_metrix(self, edgesToRemove : list = []):
         if(edgesToRemove == None or len(edgesToRemove) == 0):
@@ -109,7 +109,7 @@ class AdjacencyMatrix():
         self._amountNodes = self._amountNodes + newNode
         self._add_row()
         
-    def removeEdges(self, edgesToRemove):
+    def remove_edges(self, edgesToRemove):
         if(not self._check_edges(edgesToRemove)):
             exit()
         self._removes_edges_metrix(edgesToRemove)
@@ -124,6 +124,10 @@ class AdjacencyMatrix():
     def add_edges(self, newEdges):
         if(not self._check_edges(newEdges)):
             exit()
+        
+        if(not self._isDirected):
+            newEdges = self._create_edges_for_undirect(newEdges)
+        
         self._fill_metrix(newEdges)
         self._edges = self._edges + newEdges
         self.calculate_degree()

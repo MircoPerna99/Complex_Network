@@ -5,7 +5,7 @@ from random import sample, uniform
 class BorgattiEverettModel(ModelBase):
     def __init__(self, amountNodes:int, connectedComponentSize :int = 0):
         super().__init__()
-        if(not self._checkParameters(amountNodes, connectedComponentSize)):
+        if(not self._check_parameters(amountNodes, connectedComponentSize)):
             exit()
 
         self._amountNodes = amountNodes
@@ -14,10 +14,10 @@ class BorgattiEverettModel(ModelBase):
             connectedComponentSize = random.randint(2, amountNodes-1)
             
         self._connectedComponentSize = connectedComponentSize
-        self._initCoreComponent()
-        self._initPeripheryComponent()
+        self._init_core_component()
+        self._init_periphery_component()
 
-    def _checkParameters(self, amountNodes, connectedComponentSize):
+    def _check_parameters(self, amountNodes, connectedComponentSize):
         if(amountNodes < 4):
             print("The amount of nodes must be higher than or equal to 4")
             return False
@@ -28,15 +28,15 @@ class BorgattiEverettModel(ModelBase):
             
         return True
     
-    def _initCoreComponent(self):
+    def _init_core_component(self):
         edgesCoreComponent = []
         for i in range(0, self._connectedComponentSize):
             for j in range(i+1, self._connectedComponentSize):
                 edgesCoreComponent.append((i,j))
         
-        self._initAdjacencyMatrix(self._amountNodes, edgesCoreComponent)
+        self._init_adjacency_matrix(self._amountNodes, edgesCoreComponent)
         
-    def _initPeripheryComponent(self):
+    def _init_periphery_component(self):
         edgesPeripheryComponent = []
         for i in range(self._connectedComponentSize, self._amountNodes):
             isInsterted = False
@@ -47,6 +47,6 @@ class BorgattiEverettModel(ModelBase):
                         isInsterted = True
                     
         
-        self.adjacencyMatrix.addEdges(edgesPeripheryComponent)
+        self.adjacencyMatrix.add_edges(edgesPeripheryComponent)
                 
         
