@@ -2,6 +2,7 @@ from Histogram import Histogram
 import igraph as ig
 import matplotlib.pyplot as plt
 import numpy as np
+import networkx as nx
 
 class AdjacencyMatrix():
     def __init__(self, amountNodes = 3, edges = [], isDirected = False, isWeighted = False):
@@ -116,7 +117,7 @@ class AdjacencyMatrix():
         for edge in edgesToRemove:
             if(edge in self._edges):
                 self._edges.remove(edge)
-            else:
+            if((edge[1], edge[0]) in self._edges):
                 self._edges.remove((edge[1], edge[0]))
         self.calculate_degree()
         
@@ -188,6 +189,12 @@ class AdjacencyMatrix():
         else:
             self._calculate_degree_undirected()
             self.calculate_degree_distribution()  
+            
+    def get_degree_nodes(self):
+        if(self.degree_nodes == None):
+            self.calculate_degree()
+        
+        return self.degree_nodes
     
     def print_degree_nodes(self):
         if(self._isDirected):
@@ -284,4 +291,18 @@ class AdjacencyMatrix():
             self.calculate_strength()
             
         AdjacencyMatrix._print_dictionary("Strength ",self.strength_nodes, "Node", "Strength")  
-            
+        
+    def get_edges_dictionary(self):
+        edges_dictionry = {}
+        for edge in self._edges:
+            if(edge[0] not in edges_dictionry):
+                edges_dictionry[edge[0]] = [edge[1]]
+            else:
+                edges_dictionry[edge[0]].append(edge[1])
+        
+        return edges_dictionry
+
+    def get_edge_betweenness(self):
+        A = np.array(self._adjacency_matrix) 
+        network = nx.from_numpy_array(A)
+        return nx.edge_betweenness_centrality(network, normalized=False)

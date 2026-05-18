@@ -32,5 +32,15 @@ class ModelBase():
     def print_degree_distribution_normalized(self):
         self.adjacencyMatrix.print_degree_distribution_normalized()
 
+    def get_edge_betweenness(self):
+        return self.adjacencyMatrix.get_edge_betweenness()
+
+    def get_degree_sequences(self):
+        degree_sequences = []
+        degrees = self.adjacencyMatrix.get_degree_nodes()
+        for node in degrees.keys():
+            degree_sequences.append(int(degrees[node]))
+        
+        return degree_sequences
         
         
